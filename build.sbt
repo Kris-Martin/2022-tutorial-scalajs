@@ -1,4 +1,5 @@
 lazy val root = (project in file("."))
+  .enablePlugins(ScalaJSPlugin)
   .settings(
     name := "Scala.js tutorial",
     version := "2022.1",
