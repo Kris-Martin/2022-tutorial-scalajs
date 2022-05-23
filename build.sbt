@@ -1,3 +1,5 @@
+resolvers += "jitpack" at "https://jitpack.io"
+
 lazy val root = (project in file("."))
   .enablePlugins(ScalaJSPlugin)
   .settings(
@@ -7,7 +9,7 @@ lazy val root = (project in file("."))
 
     scalaJSUseMainModuleInitializer := true,
 
-    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.2.0",
+    libraryDependencies += "com.github.wbillingsley.veautiful" %%% "veautiful" % "v0.3-SNAPSHOT",
 
     libraryDependencies += "org.scalameta" %%% "munit" % "0.7.29" % Test
   )
