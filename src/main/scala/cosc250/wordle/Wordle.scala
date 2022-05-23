@@ -75,14 +75,47 @@ def chooseWord:String = {
 
   val root = Attacher.newRoot(dom.document.getElementById("render-here"))
 
-  val tick = () => {
-    val element = <.div(
-      <.h1("Hello world"),
-      <.h2(s"It is ${new Date().toLocaleTimeString}")
-    )
+  case class WordleGame(target:String) extends VHtmlComponent {
 
-    root.render(element)
+    // Let's define some local state for our guessing.
+    case class WGS(past:List[String] = Nil, current:String = "", guesses:Int = 6)
+    var state = WGS()
+
+    // Updates the component state and re-renders
+    def setState(s:WGS):Unit = {
+      state = s
+      rerender()
+    }
+
+    // A state update function for when we're making a guess
+    def guess() = setState(state.copy(past = state.current :: state.past, "", state.guesses - 1))
+
+    // A state update function for when we're typing a word
+    def updateCurrent(s:String) = setState(state.copy(current = s))
+
+    // Render our current state
+    def render = {
+      <.div(
+        {
+          if state.guesses > 0 then 
+            <.div(
+              <.input(
+                ^.on("input") ==> { e => for s <- e.inputValue do updateCurrent(s) }, 
+                ^.prop("value") := state.current
+              ),
+              <.button(^.on("click") --> guess(), "Guess"),
+              s" ${state.guesses} guesses remaining"
+            )
+          else <.p(s"The word was ${target}")
+        },
+        <.div(
+          <.h2("Past guesses:"),
+          for w <- state.past yield <.p(inOrder(checkString(target, w.toUpperCase)).toString)
+        )
+      )
+
+    }
   }
 
-  dom.window.setInterval(tick, 1000)
+  root.render(WordleGame(chooseWord))
 }
