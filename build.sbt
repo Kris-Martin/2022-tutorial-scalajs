@@ -5,6 +5,8 @@ lazy val root = (project in file("."))
     version := "2022.1",
     scalaVersion := "3.1.2", 
 
+    scalaJSUseMainModuleInitializer := true,
+
     libraryDependencies += "org.scalameta" %%% "munit" % "0.7.29" % Test
   )
 
