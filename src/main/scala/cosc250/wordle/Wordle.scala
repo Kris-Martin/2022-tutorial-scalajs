@@ -66,12 +66,20 @@ def chooseWord:String = {
   wordList(Random.nextInt(wordList.length))
 }
 
+import scala.scalajs._
+import js.annotation._
+
+@js.native
+@JSGlobalScope
+object Globals extends js.Object {
+  val document: js.Dynamic = js.native
+}
+
 // As this is a Scala.js project, I've removed the IO class (because File IO and StdIn don't exist)
 // We're not (for this tutorial) going to worry too much about a little mutability
 @main def runWordle = {
   val target = chooseWord
   val guess = chooseWord
 
-  println(colourisedString(inOrder(checkString(target, guess))))
-
+  Globals.document.querySelector("#render-here").innerHTML = s"My word is $target"
 }
