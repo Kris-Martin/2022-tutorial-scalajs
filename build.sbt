@@ -7,6 +7,8 @@ lazy val root = (project in file("."))
 
     scalaJSUseMainModuleInitializer := true,
 
+    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.2.0",
+
     libraryDependencies += "org.scalameta" %%% "munit" % "0.7.29" % Test
   )
 
