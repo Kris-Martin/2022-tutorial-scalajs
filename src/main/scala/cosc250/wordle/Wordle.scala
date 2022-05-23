@@ -75,6 +75,21 @@ def chooseWord:String = {
 
   val root = Attacher.newRoot(dom.document.getElementById("render-here"))
 
+  def colourisedHtml(pairs:Seq[(Color, Char)]) = <.p(
+    for (col, char) <- pairs yield <.span(^.cls := col.toString, char.toString)
+  )
+
+  given mySiteStyles:StyleSuite = StyleSuite()
+  val wordleStyle = Styling("border-radius: 10px; background: aliceblue; padding: 40px;")
+    .modifiedBy(
+      " .Green" -> "color: #00aa00; font-size: 24px; text-align: center; padding: 5px; border: 1px solid #aaa; border-radius: 5px; display: inline-block; width: 30px;",
+      " .Gray" -> "color: #888888; font-size: 24px; text-align: center; padding: 5px; border: 1px solid #aaa; border-radius: 5px; display: inline-block; width: 30px;",
+      " .Orange" -> "color: #ffaa00; font-size: 24px; text-align: center; padding: 5px; border: 1px solid #aaa; border-radius: 5px; display: inline-block; width: 30px;"
+    )
+    .register()
+  mySiteStyles.install()
+
+
   case class WordleGame(target:String) extends VHtmlComponent {
 
     // Let's define some local state for our guessing.
@@ -95,7 +110,7 @@ def chooseWord:String = {
 
     // Render our current state
     def render = {
-      <.div(
+      <.div(^.cls := wordleStyle.className, 
         {
           if state.guesses > 0 then 
             <.div(
@@ -110,7 +125,7 @@ def chooseWord:String = {
         },
         <.div(
           <.h2("Past guesses:"),
-          for w <- state.past yield <.p(inOrder(checkString(target, w.toUpperCase)).toString)
+          for w <- state.past yield colourisedHtml(inOrder(checkString(target, w.toUpperCase)))
         )
       )
 
