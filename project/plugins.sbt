@@ -1,1 +1,2 @@
-// We don't need the dotty plugin now Scala 3.1.0 is out
+// Added Scala.js plugin
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.10.0")
