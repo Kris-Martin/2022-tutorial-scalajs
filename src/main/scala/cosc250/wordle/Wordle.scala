@@ -29,7 +29,7 @@ def orangeLetters(target:CharLocations, guess:CharLocations):Seq[(Char, Int)] =
 
 // Does the working for a wordle round - take the target word and the guess and work out what letters
 // are in what colour
-def colourise(target:String, guess:String) =
+def checkString(target:String, guess:String) =
   val green = greenLetters(target, guess)
   
   val remainingInTarget = target.zipWithIndex.filterNot(green.contains(_))
@@ -54,29 +54,24 @@ def colourisedString(chars:Seq[(Color, Char)]):String =
   (for (col, c) <- chars yield s"${col.escape} $c\u001b[0m").mkString
 
 // Decribes the state of a game...
-case class GameState(wordList:Seq[String], target:String, guessesRemaining:Int):
-  // runs a single guess from this game state to produce a new game state
-  def doGuess:IO[GameState] = 
-    for 
-      _ <- IO(() => println(s"You have $guessesRemaining guesses remaining."))
-      guess <- readGuess(wordList)
-      result = inOrder(colourise(target,guess))
-      _ <- printResult(result)
-    yield
-      GameState(wordList, target, guessesRemaining - 1)
+case class GameState(wordList:Seq[String], target:String, guessesRemaining:Int)
 
-  // play is recursive.
-  def play:IO[Unit] =
-    if guessesRemaining <= 0 then IO(() => println(target)) else doGuess.flatMap(_.play)
+val wordList = Seq(
+  "APPLE", "BRAVE", "CLICK", "DONUT", "ENTER", "FIGHT", "GOING", "HELLO", "IGLOO", "JUMPY", "KICKS", "LAMPS", "MONTH",
+  "NOTED", "OPENS", "PIQUE", "QUIET", "RAISE", "TELLY", "UNDER", "VIOLA", "WHERE", "XYLEM", "YACHT", "ZEBRA" 
+)
 
-// We can describe our program in terms of its IO actions
-def wordleGame:IO[Unit] = 
-  for 
-    wordList <- getWordList
-    target <- chooseWord(wordList)
-    gs = GameState(wordList, target, 6)
-    _ <- gs.play
-  yield ()
+def chooseWord:String = {
+  import scala.util.Random
+  wordList(Random.nextInt(wordList.length))
+}
 
-// To execute our program, we run the program description
-@main def runWordle = wordleGame.unsafeRunSync
+// As this is a Scala.js project, I've removed the IO class (because File IO and StdIn don't exist)
+// We're not (for this tutorial) going to worry too much about a little mutability
+@main def runWordle = {
+  val target = chooseWord
+  val guess = chooseWord
+
+  println(colourisedString(inOrder(checkString(target, guess))))
+
+}
