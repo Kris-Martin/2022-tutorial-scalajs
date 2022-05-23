@@ -69,10 +69,33 @@ def chooseWord:String = {
 // As this is a Scala.js project, I've removed the IO class (because File IO and StdIn don't exist)
 // We're not (for this tutorial) going to worry too much about a little mutability
 @main def runWordle = {
-  val target = chooseWord
-  val guess = chooseWord
 
   import org.scalajs.dom
+  
+  // Get a reference to our div
+  val top = dom.document.querySelector("#render-here")
+  
+  // Clear its contents
+  top.innerHTML = ""
+  
+  // Set up a basic UI
+  val pastGuesses = dom.document.createElement("div")
+  val guessArea = dom.document.createElement("div")
+  val guessBox = dom.document.createElement("input").asInstanceOf[dom.HTMLInputElement]
+  val button = dom.document.createElement("button").asInstanceOf[dom.HTMLButtonElement]
+  button.innerText = "Guess"
+  top.append(pastGuesses, guessArea)
+  guessArea.append(guessBox, button)
 
-  dom.document.querySelector("#render-here").innerHTML = s"My word is $target"
+  // Choose a word
+  val target = chooseWord
+
+  button.onclick = { evt => 
+    val guess = guessBox.value.toUpperCase
+    val p = dom.document.createElement("pre")
+    p.innerText = inOrder(checkString(target, guess)).toString
+    guessArea.append(p)
+  }
+
+
 }
