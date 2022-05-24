@@ -5,6 +5,7 @@
 # Maven/sbt output directory
 target
 dist
+project/project
 
 # Test database
 lift_example

@@ -2,7 +2,7 @@
 
 This is a quick tutorial to demonstrate Scala.JS and Veautiful
 
-As it's a Scala.js project, it will expect you to have [Node.js](https://nodejs.org/en/download/) installed as well as [SBT](https://www.scala-sbt.org/). 
+As it's a Scala.js project, it will expect you to have [Node.js](https://nodejs.org/en/download/) installed as well as [SBT](https://www.scala-sbt.org/).
 
 If you prefer to work with Docker and have Docker Desktop installed, there is config for a devcontainer including node, etc, included in the repository. "Reopen in Container" from Visual Studio Code and it should set up a container for you.
 
@@ -11,15 +11,15 @@ Or you can run it from a server that already has Node and SBT, such as your univ
 The project contains some code for a command-line Wordle-like game. We'll play around with putting some
 of it into a web page.
 
-**Note**: Each of the steps involves updating the code and I often give you a new function to paste in. 
-If you're feeling lazy or don't want to do any typing, the `working` branch's history contains each of 
-these steps. Using your favourite git GUI, you can check out each of the steps in turn and try it without 
+**Note**: Each of the steps involves updating the code and I often give you a new function to paste in.
+If you're feeling lazy or don't want to do any typing, the `working` branch's history contains each of
+these steps. Using your favourite git GUI, you can check out each of the steps in turn and try it without
 having to paste the code yourself.
 
 
 ### Test the JVM project works
 
-First, load the project into sbt and run the tests. 
+First, load the project into sbt and run the tests.
 
 They're not very interesting tests, but they run.
 
@@ -53,7 +53,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "Scala.js tutorial",
     version := "2022.1",
-    scalaVersion := "3.1.2", 
+    scalaVersion := "3.1.2",
 
     libraryDependencies += "org.scalameta" %%% "munit" % "0.7.29" % Test
   )
@@ -64,7 +64,7 @@ At the sbt prompt, reload the project (`reload`) and then re-run the tests (`tes
 You should notice SBT download the Scala.js version of munit, and it will finish with output something like this:
 
 ```
-[info] Fetched artifacts of 
+[info] Fetched artifacts of
 [info] compiling 2 Scala sources to /workspaces/2022-tutorial-scalajs/target/scala-3.1.2/classes ...
 [info] compiling 1 Scala source to /workspaces/2022-tutorial-scalajs/target/scala-3.1.2/test-classes ...
 [info] Fast optimizing /workspaces/2022-tutorial-scalajs/target/scala-3.1.2/scala-js-tutorial-test-fastopt
@@ -96,13 +96,13 @@ That should start a little webserver, serving up the current directory on port `
 you picked)
 
 The `-c-1` at the end tells it disable caching. Otherwise when we hit reload in the browser, we might not
-know if we're seeing our latest changes or it's accidentally cached something. 
+know if we're seeing our latest changes or it's accidentally cached something.
 
 Open it in a web browser. (Remembering that if you're working on a university server, you'll probably
 need to open the browser on the same server.) The URL is
 
 ```
-http://localhost:50123
+http://localhost:5055
 ```
 
 At the moment, it will probably just list the contents of the directory. (If you haven't got http-server installed, it might ask to install that first too - let it.)
@@ -129,10 +129,10 @@ Hit refresh and instead of a directory listing, we should see `Hello world`.
 
 Let's load our generated JavaScript.
 
-For now, we're going to make our page load our *fast optimised* JavaScript. 
+For now, we're going to make our page load our *fast optimised* JavaScript.
 (Normally, we'd change that later to a better optimised version, but let's just use this in the tutorial).
 
-In sbt, 
+In sbt,
 
 ```
 clean
@@ -188,7 +188,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "Scala.js tutorial",
     version := "2022.1",
-    scalaVersion := "3.1.2", 
+    scalaVersion := "3.1.2",
 
     // This project uses a main method
     scalaJSUseMainModuleInitializer := true,
@@ -260,7 +260,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "Scala.js tutorial",
     version := "2022.1",
-    scalaVersion := "3.1.2", 
+    scalaVersion := "3.1.2",
 
     scalaJSUseMainModuleInitializer := true,
 
@@ -299,13 +299,13 @@ Let's change `runWordle` to play our game (sort-of):
 @main def runWordle = {
 
   import org.scalajs.dom
-  
+
   // Get a reference to our div
   val top = dom.document.querySelector("#render-here")
-  
+
   // Clear its contents
   top.innerHTML = ""
-  
+
   // Set up a basic UI
   val pastGuesses = dom.document.createElement("div")
   val guessArea = dom.document.createElement("div")
@@ -318,7 +318,7 @@ Let's change `runWordle` to play our game (sort-of):
   // Choose a word
   val target = chooseWord
 
-  button.onclick = { evt => 
+  button.onclick = { evt =>
     val guess = guessBox.value.toUpperCase
     val p = dom.document.createElement("pre")
     p.innerText = inOrder(checkString(target, guess)).toString
@@ -356,7 +356,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "Scala.js tutorial",
     version := "2022.1",
-    scalaVersion := "3.1.2", 
+    scalaVersion := "3.1.2",
 
     scalaJSUseMainModuleInitializer := true,
 
@@ -380,7 +380,7 @@ That lets you declare your UI in a declarative way using JSX
 
 ```jsx
 const root = ReactDOM.createRoot(document.getElementById('root'));
-  
+
 function tick() {
   const element = (
     <div>
@@ -435,7 +435,7 @@ Ok, let's do our wordle-like game.
 We're going to write a component that can keep some local state. For Veautiful, that is a `VHTMLComponent`
 and it just requires us to implement a `render` method for it.
 
-The biggest quirk is we use a `case class`. In this tiny example, it wouldn't matter, but in bigger 
+The biggest quirk is we use a `case class`. In this tiny example, it wouldn't matter, but in bigger
 examples it's useful to define components as case classes. (I won't bore you with the details, but it
 gives us a way of deciding whether a component should be replaced or updated.)
 
@@ -471,10 +471,10 @@ Update `runWordle` to this:
     def render = {
       <.div(
         {
-          if state.guesses > 0 then 
+          if state.guesses > 0 then
             <.div(
               <.input(
-                ^.on("input") ==> { e => for s <- e.inputValue do updateCurrent(s) }, 
+                ^.on("input") ==> { e => for s <- e.inputValue do updateCurrent(s) },
                 ^.prop("value") := state.current
               ),
               <.button(^.on("click") --> guess(), "Guess"),
@@ -518,7 +518,7 @@ run them through our code, and then produce appropriate "VNodes" (kind of like v
 This should do:
 
 ```scala
-  def colourisedHtml(pairs:Seq[(Color, Char)]) = <.p(^.cls := "wordled", 
+  def colourisedHtml(pairs:Seq[(Color, Char)]) = <.p(^.cls := "wordled",
     for (col, char) <- pairs yield <.span(^.cls := col.toString, char.toString)
   )
 ```
@@ -527,7 +527,7 @@ Where `^.cls := col.toString` sets the CSS class name of the `span` element to t
 
 Now, we could jump into the HTML and set the CSS styles of these. But as I'm going to paste in the last version of the code anyway, let's also do something funky: let's make *our CSS code too*.
 
-"CSS in JS" is a relatively recent web development. If styles are in *code* rather than in *CSS*, then 
+"CSS in JS" is a relatively recent web development. If styles are in *code* rather than in *CSS*, then
 they're easier to publish as a library.
 
 We're going to programmatically install a StyleSuite into the page:
@@ -558,7 +558,7 @@ Except that to avoid collision, our style actually has a randomly generated uniq
 
 ```scala
     def render = {
-      <.div(^.cls := wordleStyle.className, 
+      <.div(^.cls := wordleStyle.className,
         // etc
 ```
 
@@ -608,12 +608,12 @@ That sounds tricky to describe how to make the changes bit by bit, so make `runW
 
     // Render our current state
     def render = {
-      <.div(^.cls := wordleStyle.className, 
+      <.div(^.cls := wordleStyle.className,
         {
-          if state.guesses > 0 then 
+          if state.guesses > 0 then
             <.div(
               <.input(
-                ^.on("input") ==> { e => for s <- e.inputValue do updateCurrent(s) }, 
+                ^.on("input") ==> { e => for s <- e.inputValue do updateCurrent(s) },
                 ^.prop("value") := state.current
               ),
               <.button(^.on("click") --> guess(), "Guess"),
